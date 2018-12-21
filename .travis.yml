@@ -1,5 +1,6 @@
 dist: xenial
 sudo: false
+language: android
 before_script:
   - wget https://storage.googleapis.com/flutter_infra/releases/stable/linux/flutter_linux_v1.0.0-stable.tar.xz
   - tar -xf flutter_linux_v1.0.0-stable.tar.xz
