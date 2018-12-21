@@ -1,13 +1,43 @@
 dist: xenial
 sudo: false
 language: android
-before_script:
-  - wget https://storage.googleapis.com/flutter_infra/releases/stable/linux/flutter_linux_v1.0.0-stable.tar.xz
-  - tar -xf flutter_linux_v1.0.0-stable.tar.xz
+jdk: oraclejdk8
+
+install:
+  # Based off guide from https://medium.com/@bod/cache-your-android-sdk-with-travis-c816b9264708
+
+  # Download and unzip the Android SDK tools (if not already there thanks to the cache mechanism)
+  # Latest version available here: https://developer.android.com/studio/#command-tools
+  - if test ! -e $HOME/downloads/sdk-tools.zip ; then curl https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip > $HOME/downloads/sdk-tools.zip ; fi
+  - unzip -qq -n $HOME/downloads/sdk-tools.zip -d $HOME/android-sdk
+
+  # Install or update Android SDK components (will not do anything if already up to date thanks to the cache mechanism)
+  - echo y | $HOME/android-sdk/tools/bin/sdkmanager 'tools' > /dev/null
+  - echo y | $HOME/android-sdk/tools/bin/sdkmanager 'platform-tools' > /dev/null
+  - echo y | $HOME/android-sdk/tools/bin/sdkmanager 'build-tools;27.0.3' > /dev/null
+  - echo y | $HOME/android-sdk/tools/bin/sdkmanager 'platforms;android-27' > /dev/null
+
+  # Get and install flutter
+  if test ! -e $HOME/downloads/flutter_linux_v1.0.0-stable.tar.xz ; then curl https://storage.googleapis.com/flutter_infra/releases/stable/linux/flutter_linux_v1.0.0-stable.tar.xz > $HOME/downloads/flutter_linux_v1.0.0-stable.tar.xz ; fi
+  - tar -xf $HOME/downloads/flutter_linux_v1.0.0-stable.tar.xz
   - ./flutter/bin/flutter doctor
+
+env:
+- ANDROID_HOME=$HOME/android-sdk
+  
 script:
   - ./flutter/bin/flutter test
   - ./flutter/bin/flutter build apk
+
 cache:
   directories:
   - $HOME/.pub-cache
+  - $HOME/downloads
+  - $HOME/android-sdk
+
+  # Gradle dependencies
+  - $HOME/.gradle/caches/
+  - $HOME/.gradle/wrapper/
+
+  # Android build cache (see http://tools.android.com/tech-docs/build-cache)
+  - $HOME/.android/build-cache
