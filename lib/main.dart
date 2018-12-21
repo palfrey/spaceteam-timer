@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'choose.dart';
+import 'setup.dart';
 
-void main() => runApp(MaterialApp(
-      title: 'Spaceteam Timer',
-      home: TimerSelect(),
-    ));
+void main() {
+  setupMusicFiles();
+  runApp(MaterialApp(
+    title: 'Spaceteam Timer',
+    home: TimerSelect(),
+  ));
+}
