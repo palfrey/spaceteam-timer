@@ -1,4 +1,5 @@
 # spaceteam_timer
+[![Build Status](https://travis-ci.org/palfrey/spaceteam-timer.svg?branch=master)](https://travis-ci.org/palfrey/spaceteam-timer)
 
 A new Flutter project.
 
