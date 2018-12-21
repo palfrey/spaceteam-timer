@@ -1,0 +1,12 @@
+dist: xenial
+sudo: false
+before_script:
+  - wget https://storage.googleapis.com/flutter_infra/releases/stable/linux/flutter_linux_v1.0.0-stable.tar.xz
+  - tar -xf flutter_linux_v1.0.0-stable.tar.xz
+  - ./flutter/bin/flutter doctor
+script:
+  - ./flutter/bin/flutter test
+  - ./flutter/bin/flutter build apk
+cache:
+  directories:
+  - $HOME/.pub-cache
