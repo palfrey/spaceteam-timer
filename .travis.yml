@@ -18,7 +18,7 @@ install:
   - echo y | $HOME/android-sdk/tools/bin/sdkmanager 'platforms;android-27' > /dev/null
 
   # Get and install flutter
-  if test ! -e $HOME/downloads/flutter_linux_v1.0.0-stable.tar.xz ; then curl https://storage.googleapis.com/flutter_infra/releases/stable/linux/flutter_linux_v1.0.0-stable.tar.xz > $HOME/downloads/flutter_linux_v1.0.0-stable.tar.xz ; fi
+  - if test ! -e $HOME/downloads/flutter_linux_v1.0.0-stable.tar.xz ; then curl https://storage.googleapis.com/flutter_infra/releases/stable/linux/flutter_linux_v1.0.0-stable.tar.xz > $HOME/downloads/flutter_linux_v1.0.0-stable.tar.xz ; fi
   - tar -xf $HOME/downloads/flutter_linux_v1.0.0-stable.tar.xz
   - ./flutter/bin/flutter doctor
 
