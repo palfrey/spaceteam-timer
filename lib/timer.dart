@@ -15,10 +15,12 @@ class TimerScreen extends StatefulWidget {
 class _TimerState extends State<TimerScreen> {
   bool _isPlaying = false;
   String _playerTxt = "";
+  FlutterSound flutterSound;
 
   @override
-  Widget build(BuildContext context) {
-    FlutterSound flutterSound = new FlutterSound();
+  void initState() {
+    super.initState();
+    this.flutterSound = new FlutterSound();
     pathForLength(lengthForDifficulty(widget.difficulty)).then((path) {
       return flutterSound.startPlayer('file://$path');
     }).then((result) {
@@ -44,6 +46,10 @@ class _TimerState extends State<TimerScreen> {
         }
       });
     });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           title: Text('Run timer'),
