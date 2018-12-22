@@ -55,7 +55,21 @@ class _TimerState extends State<TimerScreen> {
         appBar: AppBar(
           title: Text('Run timer'),
         ),
-        body: Center(child: Text(_playerTxt)));
+        body: Center(
+            child: Column(children: <Widget>[
+          Text(_playerTxt, style: TextStyle(fontSize: 48.0)),
+          IconButton(
+              icon: Icon(Icons.stop),
+              iconSize: 128,
+              tooltip: 'Stop',
+              onPressed: () {
+                this.flutterSound.stopPlayer().then((v) {
+                  this.setState(() {
+                    this._isPlaying = false;
+                  });
+                });
+              })
+        ])));
   }
 
   @override
