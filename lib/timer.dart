@@ -24,14 +24,15 @@ class _TimerState extends State<TimerScreen> {
     pathForLength(lengthForDifficulty(widget.difficulty)).then((path) {
       return flutterSound.startPlayer('file://$path');
     }).then((result) {
-      print('startPlayer: $result');
+      this.setState(() {
+        this._isPlaying = true;
+      });
       flutterSound.onPlayerStateChanged.listen((e) {
         if (!this.mounted) return;
         if (e != null) {
           int startMs = startForDifficulty(widget.difficulty);
           if (e.currentPosition < startMs) {
             this.setState(() {
-              this._isPlaying = true;
               this._playerTxt = "wait...";
             });
           } else {
@@ -40,7 +41,6 @@ class _TimerState extends State<TimerScreen> {
             date = date.subtract(new Duration(milliseconds: startMs));
             String txt = DateFormat('mm:ss:SS', 'en_US').format(date);
             this.setState(() {
-              this._isPlaying = true;
               this._playerTxt = txt.substring(0, 8);
             });
           }
