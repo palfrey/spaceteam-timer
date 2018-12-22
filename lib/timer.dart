@@ -25,13 +25,22 @@ class _TimerState extends State<TimerScreen> {
       print('startPlayer: $result');
       flutterSound.onPlayerStateChanged.listen((e) {
         if (e != null) {
-          DateTime date = new DateTime.fromMillisecondsSinceEpoch(
-              e.currentPosition.toInt());
-          String txt = DateFormat('mm:ss:SS', 'en_US').format(date);
-          this.setState(() {
-            this._isPlaying = true;
-            this._playerTxt = txt.substring(0, 8);
-          });
+          int startMs = startForDifficulty(widget.difficulty);
+          if (e.currentPosition < startMs) {
+            this.setState(() {
+              this._isPlaying = true;
+              this._playerTxt = "wait...";
+            });
+          } else {
+            DateTime date = new DateTime.fromMillisecondsSinceEpoch(
+                e.currentPosition.toInt());
+            date = date.subtract(new Duration(milliseconds: startMs));
+            String txt = DateFormat('mm:ss:SS', 'en_US').format(date);
+            this.setState(() {
+              this._isPlaying = true;
+              this._playerTxt = txt.substring(0, 8);
+            });
+          }
         }
       });
     });
