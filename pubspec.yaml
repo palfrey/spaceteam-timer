@@ -21,6 +21,7 @@ dependencies:
   cupertino_icons: ^0.1.2
   flutter_sound: ^1.2.1
   path_provider: ^0.4.1
+  intl: ^0.15.7
 
 dev_dependencies:
   flutter_test:
