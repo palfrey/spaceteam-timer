@@ -26,6 +26,7 @@ class _TimerState extends State<TimerScreen> {
     }).then((result) {
       print('startPlayer: $result');
       flutterSound.onPlayerStateChanged.listen((e) {
+        if (!this.mounted) return;
         if (e != null) {
           int startMs = startForDifficulty(widget.difficulty);
           if (e.currentPosition < startMs) {
@@ -55,5 +56,13 @@ class _TimerState extends State<TimerScreen> {
           title: Text('Run timer'),
         ),
         body: Center(child: Text(_playerTxt)));
+  }
+
+  @override
+  void deactivate() {
+    if (this._isPlaying) {
+      this.flutterSound.stopPlayer();
+    }
+    super.deactivate();
   }
 }
