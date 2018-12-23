@@ -2,7 +2,6 @@ import 'package:flutter_sound/flutter_sound.dart';
 import 'package:flutter/material.dart';
 import 'difficulty.dart';
 import 'setup.dart';
-import 'package:intl/intl.dart';
 
 class TimerScreen extends StatefulWidget {
   final Difficulty difficulty;
@@ -14,12 +13,24 @@ class TimerScreen extends StatefulWidget {
 
 class _TimerState extends State<TimerScreen> {
   bool _isPlaying = false;
+  int startMs;
+  int totalSeconds;
   String _playerTxt = "";
   FlutterSound flutterSound;
+
+  String padLeft(int value) {
+    return value.toString().padLeft(2, '0');
+  }
+
+  String timeFromSeconds(int seconds) {
+    return "${padLeft((seconds / 60).floor())}:${padLeft(seconds % 60)}";
+  }
 
   @override
   void initState() {
     super.initState();
+    startMs = startForDifficulty(widget.difficulty);
+    totalSeconds = lengthForDifficulty(widget.difficulty) * 60;
     this.flutterSound = new FlutterSound();
     pathForLength(lengthForDifficulty(widget.difficulty)).then((path) {
       return flutterSound.startPlayer('file://$path');
@@ -30,18 +41,25 @@ class _TimerState extends State<TimerScreen> {
       flutterSound.onPlayerStateChanged.listen((e) {
         if (!this.mounted) return;
         if (e != null) {
-          int startMs = startForDifficulty(widget.difficulty);
           if (e.currentPosition < startMs) {
             this.setState(() {
-              this._playerTxt = "wait...";
+              this._playerTxt = "Get Ready!";
+            });
+          } else if (e.currentPosition > startMs + (totalSeconds * 1000)) {
+            this.setState(() {
+              this._playerTxt = "Failed!";
             });
           } else {
             DateTime date = new DateTime.fromMillisecondsSinceEpoch(
                 e.currentPosition.toInt());
-            date = date.subtract(new Duration(milliseconds: startMs));
-            String txt = DateFormat('mm:ss:SS', 'en_US').format(date);
+            DateTime sinceStart =
+                date.subtract(new Duration(milliseconds: startMs));
+            int secondsSoFar = (sinceStart.minute * 60) + sinceStart.second;
+            String sinceTxt = timeFromSeconds(secondsSoFar);
+            int remainingSeconds = totalSeconds - secondsSoFar;
+            String endTxt = timeFromSeconds(remainingSeconds);
             this.setState(() {
-              this._playerTxt = txt.substring(0, 8);
+              this._playerTxt = "Used: $sinceTxt\nRemaining: $endTxt";
             });
           }
         }
