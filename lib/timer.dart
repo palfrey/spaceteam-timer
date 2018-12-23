@@ -2,6 +2,7 @@ import 'package:flutter_sound/flutter_sound.dart';
 import 'package:flutter/material.dart';
 import 'difficulty.dart';
 import 'setup.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class TimerScreen extends StatefulWidget {
   final Difficulty difficulty;
@@ -73,21 +74,29 @@ class _TimerState extends State<TimerScreen> {
         appBar: AppBar(
           title: Text('Run timer'),
         ),
-        body: Center(
-            child: Column(children: <Widget>[
-          Text(_playerTxt, style: TextStyle(fontSize: 48.0)),
-          IconButton(
-              icon: Icon(Icons.stop),
-              iconSize: 128,
-              tooltip: 'Stop',
-              onPressed: () {
-                this.flutterSound.stopPlayer().then((v) {
-                  this.setState(() {
-                    this._isPlaying = false;
-                  });
-                });
-              })
-        ])));
+        body: Row(children: <Widget>[
+          Expanded(
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                AutoSizeText(_playerTxt,
+                    style: TextStyle(fontSize: 120.0), maxLines: 2),
+                RaisedButton(
+                    child: AutoSizeText('Stop timer',
+                        maxLines: 1,
+                        style: TextStyle(
+                            fontSize: 120.0,
+                            color: Color.fromRGBO(255, 255, 255, 1))),
+                    color: Color.fromRGBO(255, 0, 0, 1),
+                    onPressed: () {
+                      this.flutterSound.stopPlayer().then((v) {
+                        this.setState(() {
+                          this._isPlaying = false;
+                        });
+                      });
+                    })
+              ]))
+        ]));
   }
 
   @override

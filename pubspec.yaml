@@ -22,6 +22,7 @@ dependencies:
   flutter_sound: ^1.2.1
   path_provider: ^0.4.1
   intl: ^0.15.7
+  auto_size_text: ^0.3.0
 
 dev_dependencies:
   flutter_test:
