@@ -89,11 +89,13 @@ class _TimerState extends State<TimerScreen> {
                             color: Color.fromRGBO(255, 255, 255, 1))),
                     color: Color.fromRGBO(255, 0, 0, 1),
                     onPressed: () {
-                      this.flutterSound.stopPlayer().then((v) {
-                        this.setState(() {
-                          this._isPlaying = false;
+                      if (this._isPlaying) {
+                        this.flutterSound.stopPlayer().then((v) {
+                          this.setState(() {
+                            this._isPlaying = false;
+                          });
                         });
-                      });
+                      }
                     })
               ]))
         ]));
