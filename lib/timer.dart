@@ -48,7 +48,8 @@ class _TimerState extends State<TimerScreen> {
             });
           } else if (e.currentPosition > startMs + (totalSeconds * 1000)) {
             this.setState(() {
-              this._playerTxt = "Failed!";
+              this._playerTxt = "Mission Failure!";
+              this._isPlaying = false;
             });
           } else {
             DateTime date = new DateTime.fromMillisecondsSinceEpoch(
@@ -60,7 +61,7 @@ class _TimerState extends State<TimerScreen> {
             int remainingSeconds = totalSeconds - secondsSoFar;
             String endTxt = timeFromSeconds(remainingSeconds);
             this.setState(() {
-              this._playerTxt = "Used: $sinceTxt\nRemaining: $endTxt";
+              this._playerTxt = "Used:\n$sinceTxt\nRemaining:\n$endTxt";
             });
           }
         }
@@ -70,6 +71,27 @@ class _TimerState extends State<TimerScreen> {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> widgets = [
+      AutoSizeText(_playerTxt, style: TextStyle(fontSize: 120.0), maxLines: 4)
+    ];
+    if (_isPlaying) {
+      widgets.add(RaisedButton(
+          child: AutoSizeText('Stop timer',
+              maxLines: 1,
+              style: TextStyle(
+                  fontSize: 120.0, color: Color.fromRGBO(255, 255, 255, 1))),
+          color: Color.fromRGBO(255, 0, 0, 1),
+          onPressed: () {
+            if (_isPlaying) {
+              flutterSound.stopPlayer().then((v) {
+                setState(() {
+                  _isPlaying = false;
+                });
+              });
+            }
+          }));
+    }
+
     return Scaffold(
         appBar: AppBar(
           title: Text('Run timer'),
@@ -78,26 +100,7 @@ class _TimerState extends State<TimerScreen> {
           Expanded(
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: <Widget>[
-                AutoSizeText(_playerTxt,
-                    style: TextStyle(fontSize: 120.0), maxLines: 2),
-                RaisedButton(
-                    child: AutoSizeText('Stop timer',
-                        maxLines: 1,
-                        style: TextStyle(
-                            fontSize: 120.0,
-                            color: Color.fromRGBO(255, 255, 255, 1))),
-                    color: Color.fromRGBO(255, 0, 0, 1),
-                    onPressed: () {
-                      if (this._isPlaying) {
-                        this.flutterSound.stopPlayer().then((v) {
-                          this.setState(() {
-                            this._isPlaying = false;
-                          });
-                        });
-                      }
-                    })
-              ]))
+                  children: widgets))
         ]));
   }
 
