@@ -1,4 +1,4 @@
-package com.example.spaceteamtimer;
+package net.tevp.spaceteamtimer;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;
