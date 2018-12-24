@@ -17,7 +17,7 @@ Future<void> setupMusicFiles() async {
     final storePath = await pathForLength(i);
     final f = File(storePath);
     if (!await f.exists()) {
-      final assetKey = "music/$i+Min+Spaceteam+Timer.mp3";
+      final assetKey = "assets/music/$i+Min+Spaceteam+Timer.mp3";
       var data = await rootBundle.load(assetKey);
       await f.writeAsBytes(data.buffer.asInt8List());
     }
