@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'difficulty.dart';
 import 'setup.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:screen/screen.dart';
 
 class TimerScreen extends StatefulWidget {
   final Difficulty difficulty;
@@ -30,6 +31,7 @@ class _TimerState extends State<TimerScreen> {
   @override
   void initState() {
     super.initState();
+    Screen.keepOn(true);
     startMs = startForDifficulty(widget.difficulty);
     totalSeconds = lengthForDifficulty(widget.difficulty) * 60;
     this.flutterSound = new FlutterSound();
@@ -109,6 +111,7 @@ class _TimerState extends State<TimerScreen> {
     if (this._isPlaying) {
       this.flutterSound.stopPlayer();
     }
+    Screen.keepOn(false);
     super.deactivate();
   }
 }
