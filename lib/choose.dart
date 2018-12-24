@@ -25,11 +25,13 @@ class TimerSelect extends StatelessWidget {
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-              AutoSizeText(
-                'Select difficulty',
-                maxLines: 1,
-                style: TextStyle(fontSize: 120.0),
-              ),
+              Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: AutoSizeText(
+                    'Select difficulty',
+                    maxLines: 1,
+                    style: TextStyle(fontSize: 120.0),
+                  )),
               RaisedButton(
                   child: AutoSizeText('Easy (7 minutes)',
                       maxLines: 1, style: TextStyle(fontSize: 120.0)),
