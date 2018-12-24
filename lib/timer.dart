@@ -94,7 +94,7 @@ class _TimerState extends State<TimerScreen> {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text('Run timer'),
+          title: Text('Play the game!'),
         ),
         body: Row(children: <Widget>[
           Expanded(
