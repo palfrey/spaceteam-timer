@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'difficulty.dart';
 import 'timer.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TimerSelect extends StatelessWidget {
   void selectDifficulty(BuildContext context, Difficulty level) {
@@ -46,7 +47,17 @@ class TimerSelect extends StatelessWidget {
                       maxLines: 1, style: TextStyle(fontSize: 120.0)),
                   onPressed: () {
                     selectDifficulty(context, Difficulty.Hard);
-                  })
+                  }),
+              RaisedButton(
+                  color: Color.fromRGBO(0x12, 0x1b, 0x2f, 1),
+                  child: AutoSizeText('Buy the card game',
+                      maxLines: 1,
+                      style: TextStyle(
+                          fontSize: 120.0,
+                          color: Color.fromRGBO(255, 255, 255, 1))),
+                  onPressed: () {
+                    launch("https://www.playspaceteam.com/store/");
+                  }),
             ]))
       ]),
     );
