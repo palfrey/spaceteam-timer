@@ -1,33 +1,42 @@
-dist: xenial
 sudo: false
-language: android
-jdk: oraclejdk8
 
 install:
-  # Based off guide from https://medium.com/@bod/cache-your-android-sdk-with-travis-c816b9264708
-
-  # Download and unzip the Android SDK tools (if not already there thanks to the cache mechanism)
-  # Latest version available here: https://developer.android.com/studio/#command-tools
-  - if test ! -e $HOME/downloads/sdk-tools.zip ; then curl https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip > $HOME/downloads/sdk-tools.zip ; fi
-  - unzip -qq -n $HOME/downloads/sdk-tools.zip -d $HOME/android-sdk
-
-  # Install or update Android SDK components (will not do anything if already up to date thanks to the cache mechanism)
-  - echo y | $HOME/android-sdk/tools/bin/sdkmanager 'tools' > /dev/null
-  - echo y | $HOME/android-sdk/tools/bin/sdkmanager 'platform-tools' > /dev/null
-  - echo y | $HOME/android-sdk/tools/bin/sdkmanager 'build-tools;27.0.3' > /dev/null
-  - echo y | $HOME/android-sdk/tools/bin/sdkmanager 'platforms;android-27' > /dev/null
-
   # Get and install flutter
   - if test ! -e $HOME/downloads/flutter_linux_v1.0.0-stable.tar.xz ; then curl https://storage.googleapis.com/flutter_infra/releases/stable/linux/flutter_linux_v1.0.0-stable.tar.xz > $HOME/downloads/flutter_linux_v1.0.0-stable.tar.xz ; fi
   - tar -xf $HOME/downloads/flutter_linux_v1.0.0-stable.tar.xz
   - ./flutter/bin/flutter doctor
 
-env:
-- ANDROID_HOME=$HOME/android-sdk
-  
-script:
-  - ./flutter/bin/flutter test
-  - ./flutter/bin/flutter build apk --debug
+matrix:
+  include:
+    - os: osx
+      osx_image: xcode10
+      script:
+        - ./flutter/bin/flutter build ios --debug --no-codesign
+
+    - dist: xenial
+      language: android
+      jdk: oraclejdk8
+      env:
+        - ANDROID_HOME=$HOME/android-sdk
+      before_install:
+        # Based off guide from https://medium.com/@bod/cache-your-android-sdk-with-travis-c816b9264708
+        # Download and unzip the Android SDK tools (if not already there thanks to the cache mechanism)
+        # Latest version available here: https://developer.android.com/studio/#command-tools
+        - if test ! -e $HOME/downloads/sdk-tools.zip ; then curl https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip > $HOME/downloads/sdk-tools.zip ; fi
+        - unzip -qq -n $HOME/downloads/sdk-tools.zip -d $HOME/android-sdk
+
+        # Install or update Android SDK components (will not do anything if already up to date thanks to the cache mechanism)
+        - echo y | $HOME/android-sdk/tools/bin/sdkmanager 'tools' > /dev/null
+        - echo y | $HOME/android-sdk/tools/bin/sdkmanager 'platform-tools' > /dev/null
+        - echo y | $HOME/android-sdk/tools/bin/sdkmanager 'build-tools;27.0.3' > /dev/null
+        - echo y | $HOME/android-sdk/tools/bin/sdkmanager 'platforms;android-27' > /dev/null
+      script:
+        - ./flutter/bin/flutter test
+        - ./flutter/bin/flutter build apk --debug
+      before_cache:
+        # Do not cache a few Gradle files/directories (see https://docs.travis-ci.com/user/languages/java/#Caching)
+        - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+        - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 
 cache:
   directories:
@@ -41,8 +50,3 @@ cache:
 
   # Android build cache (see http://tools.android.com/tech-docs/build-cache)
   - $HOME/.android/build-cache
-
-before_cache:
-  # Do not cache a few Gradle files/directories (see https://docs.travis-ci.com/user/languages/java/#Caching)
-  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
