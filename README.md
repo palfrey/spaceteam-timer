@@ -1,5 +1,6 @@
 # spaceteam_timer
 [![Build Status](https://travis-ci.org/palfrey/spaceteam-timer.svg?branch=master)](https://travis-ci.org/palfrey/spaceteam-timer)
+[![Get it on Google Play](https://developer.android.com/images/brand/en_generic_rgb_wo_45.png)](https://play.google.com/store/apps/details?id=net.tevp.spaceteamtimer)
 
 Deeply unofficial Spaceteam card game timer app
 
