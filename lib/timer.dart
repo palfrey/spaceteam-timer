@@ -14,11 +14,14 @@ class TimerScreen extends StatefulWidget {
 }
 
 class _TimerState extends State<TimerScreen> {
-  bool _isPlaying = false;
+  bool isPlaying = false;
+  bool success = false;
   int startMs;
   int totalSeconds;
-  String _playerTxt = "";
+  String playerTxt = "";
   FlutterSound flutterSound;
+  String sinceTxt;
+  String endTxt;
 
   String padLeft(int value) {
     return value.toString().padLeft(2, '0');
@@ -39,19 +42,20 @@ class _TimerState extends State<TimerScreen> {
       return flutterSound.startPlayer('file://$path');
     }).then((result) {
       this.setState(() {
-        this._isPlaying = true;
+        isPlaying = true;
+        endTxt = timeFromSeconds(totalSeconds);
       });
       flutterSound.onPlayerStateChanged.listen((e) {
         if (!this.mounted) return;
         if (e != null) {
           if (e.currentPosition < startMs) {
             this.setState(() {
-              this._playerTxt = "Get Ready!";
+              playerTxt = "Get Ready!";
             });
           } else if (e.currentPosition > startMs + (totalSeconds * 1000)) {
             this.setState(() {
-              this._playerTxt = "Mission Failure!";
-              this._isPlaying = false;
+              playerTxt = "Mission Failure!";
+              isPlaying = false;
             });
           } else {
             DateTime date = new DateTime.fromMillisecondsSinceEpoch(
@@ -59,11 +63,11 @@ class _TimerState extends State<TimerScreen> {
             DateTime sinceStart =
                 date.subtract(new Duration(milliseconds: startMs));
             int secondsSoFar = (sinceStart.minute * 60) + sinceStart.second;
-            String sinceTxt = timeFromSeconds(secondsSoFar);
+            sinceTxt = timeFromSeconds(secondsSoFar);
             int remainingSeconds = totalSeconds - secondsSoFar;
-            String endTxt = timeFromSeconds(remainingSeconds);
+            endTxt = timeFromSeconds(remainingSeconds);
             this.setState(() {
-              this._playerTxt = "Used:\n$sinceTxt\nRemaining:\n$endTxt";
+              playerTxt = "Used:\n$sinceTxt\nRemaining:\n$endTxt";
             });
           }
         }
@@ -74,9 +78,10 @@ class _TimerState extends State<TimerScreen> {
   @override
   Widget build(BuildContext context) {
     List<Widget> widgets = [
-      AutoSizeText(_playerTxt, style: TextStyle(fontSize: 120.0), maxLines: 4)
+      AutoSizeText(playerTxt,
+          style: TextStyle(fontSize: 120.0), maxLines: success ? 3 : 4)
     ];
-    if (_isPlaying) {
+    if (isPlaying) {
       widgets.add(RaisedButton(
           child: AutoSizeText('Stop timer',
               maxLines: 1,
@@ -84,10 +89,12 @@ class _TimerState extends State<TimerScreen> {
                   fontSize: 120.0, color: Color.fromRGBO(255, 255, 255, 1))),
           color: Color.fromRGBO(255, 0, 0, 1),
           onPressed: () {
-            if (_isPlaying) {
+            if (isPlaying) {
               flutterSound.stopPlayer().then((v) {
                 setState(() {
-                  _isPlaying = false;
+                  success = true;
+                  isPlaying = false;
+                  playerTxt = "Success!\nRemaining:\n$endTxt";
                 });
               });
             }
@@ -108,7 +115,7 @@ class _TimerState extends State<TimerScreen> {
 
   @override
   void deactivate() {
-    if (this._isPlaying) {
+    if (isPlaying) {
       this.flutterSound.stopPlayer();
     }
     Screen.keepOn(false);
