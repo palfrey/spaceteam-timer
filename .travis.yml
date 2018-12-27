@@ -1,15 +1,17 @@
 sudo: false
 
 install:
-  # Get and install flutter
-  - if test ! -e $HOME/downloads/flutter_linux_v1.0.0-stable.tar.xz ; then curl https://storage.googleapis.com/flutter_infra/releases/stable/linux/flutter_linux_v1.0.0-stable.tar.xz > $HOME/downloads/flutter_linux_v1.0.0-stable.tar.xz ; fi
-  - tar -xf $HOME/downloads/flutter_linux_v1.0.0-stable.tar.xz
+  # Check flutter setup
   - ./flutter/bin/flutter doctor
 
 matrix:
   include:
     - os: osx
       osx_image: xcode10
+      before_install:
+        # Get Flutter
+        - if test ! -e $HOME/downloads/flutter_macos_v1.0.0-stable.zip ; then curl https://storage.googleapis.com/flutter_infra/releases/stable/macos/flutter_macos_v1.0.0-stable.zip > $HOME/downloads/flutter_macos_v1.0.0-stable.zip ; fi
+        - unzip $HOME/downloads/flutter_macos_v1.0.0-stable.zip
       script:
         - ./flutter/bin/flutter build ios --debug --no-codesign
 
@@ -30,6 +32,10 @@ matrix:
         - echo y | $HOME/android-sdk/tools/bin/sdkmanager 'platform-tools' > /dev/null
         - echo y | $HOME/android-sdk/tools/bin/sdkmanager 'build-tools;27.0.3' > /dev/null
         - echo y | $HOME/android-sdk/tools/bin/sdkmanager 'platforms;android-27' > /dev/null
+
+        # Get Flutter
+        - if test ! -e $HOME/downloads/flutter_linux_v1.0.0-stable.tar.xz ; then curl https://storage.googleapis.com/flutter_infra/releases/stable/linux/flutter_linux_v1.0.0-stable.tar.xz > $HOME/downloads/flutter_linux_v1.0.0-stable.tar.xz ; fi
+        - tar -xf $HOME/downloads/flutter_linux_v1.0.0-stable.tar.xz
       script:
         - ./flutter/bin/flutter test
         - ./flutter/bin/flutter build apk --debug
