@@ -24,12 +24,12 @@ class _TimerState extends State<TimerScreen> {
   String sinceTxt;
   String endTxt;
 
-  String padLeft(int value) {
-    return value.toString().padLeft(2, '0');
+  String padLeft(int value, int count) {
+    return value.toString().padLeft(count, '0');
   }
 
   String timeFromSeconds(int seconds) {
-    return "${padLeft((seconds / 60).floor())}:${padLeft(seconds % 60)}";
+    return "${padLeft((seconds / 60).floor(), 1)}:${padLeft(seconds % 60, 2)}";
   }
 
   @override
