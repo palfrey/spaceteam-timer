@@ -27,7 +27,7 @@ env:
   
 script:
   - ./flutter/bin/flutter test
-  - ./flutter/bin/flutter build apk
+  - ./flutter/bin/flutter build apk --debug
 
 cache:
   directories:
