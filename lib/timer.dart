@@ -16,6 +16,7 @@ class TimerScreen extends StatefulWidget {
 class _TimerState extends State<TimerScreen> {
   bool isPlaying = false;
   bool success = false;
+  bool failure = false;
   int startMs;
   int totalSeconds;
   String playerTxt = "";
@@ -46,7 +47,7 @@ class _TimerState extends State<TimerScreen> {
         endTxt = timeFromSeconds(totalSeconds);
       });
       flutterSound.onPlayerStateChanged.listen((e) {
-        if (!this.mounted) return;
+        if (!this.mounted || !this.isPlaying) return;
         if (e != null) {
           if (e.currentPosition < startMs) {
             this.setState(() {
@@ -56,6 +57,7 @@ class _TimerState extends State<TimerScreen> {
             this.setState(() {
               playerTxt = "Mission Failure!";
               isPlaying = false;
+              failure = true;
             });
           } else {
             DateTime date = new DateTime.fromMillisecondsSinceEpoch(
@@ -79,7 +81,8 @@ class _TimerState extends State<TimerScreen> {
   Widget build(BuildContext context) {
     List<Widget> widgets = [
       AutoSizeText(playerTxt,
-          style: TextStyle(fontSize: 120.0), maxLines: success ? 3 : 4)
+          style: TextStyle(fontSize: 120.0),
+          maxLines: failure ? 1 : (success ? 3 : 4))
     ];
     if (isPlaying) {
       widgets.add(RaisedButton(
@@ -90,11 +93,13 @@ class _TimerState extends State<TimerScreen> {
           color: Color.fromRGBO(255, 0, 0, 1),
           onPressed: () {
             if (isPlaying) {
+              setState(() {
+                isPlaying = false;
+              }); // so we don't attempt to re-read the player state
               flutterSound.stopPlayer().then((v) {
                 setState(() {
                   success = true;
-                  isPlaying = false;
-                  playerTxt = "Success!\nRemaining:\n$endTxt";
+                  playerTxt = "Mission Success!\nRemaining:\n$endTxt";
                 });
               });
             }
