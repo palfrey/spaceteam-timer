@@ -69,7 +69,7 @@ class _TimerState extends State<TimerScreen> {
             int remainingSeconds = totalSeconds - secondsSoFar;
             endTxt = timeFromSeconds(remainingSeconds);
             this.setState(() {
-              playerTxt = "Used:\n$sinceTxt\nRemaining:\n$endTxt";
+              playerTxt = "Used: $sinceTxt\nLeft: $endTxt";
             });
           }
         }
@@ -81,8 +81,7 @@ class _TimerState extends State<TimerScreen> {
   Widget build(BuildContext context) {
     List<Widget> widgets = [
       AutoSizeText(playerTxt,
-          style: TextStyle(fontSize: 120.0),
-          maxLines: failure ? 1 : (success ? 3 : 4))
+          style: TextStyle(fontSize: 120.0), maxLines: failure ? 1 : 2)
     ];
     if (isPlaying) {
       widgets.add(RaisedButton(
@@ -99,7 +98,7 @@ class _TimerState extends State<TimerScreen> {
               flutterSound.stopPlayer().then((v) {
                 setState(() {
                   success = true;
-                  playerTxt = "Mission Success!\nRemaining:\n$endTxt";
+                  playerTxt = "Mission Success!\nLeft: $endTxt";
                 });
               });
             }
