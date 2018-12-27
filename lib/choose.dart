@@ -33,7 +33,7 @@ class TimerSelect extends StatelessWidget {
                     style: TextStyle(fontSize: 120.0),
                   )),
               RaisedButton(
-                  child: AutoSizeText('Easy (7 minutes)',
+                  child: AutoSizeText('\u{A0}Easy (7 minutes)\u{A0}',
                       maxLines: 1, style: TextStyle(fontSize: 120.0)),
                   onPressed: () {
                     selectDifficulty(context, Difficulty.Easy);
@@ -45,7 +45,7 @@ class TimerSelect extends StatelessWidget {
                     selectDifficulty(context, Difficulty.Medium);
                   }),
               RaisedButton(
-                  child: AutoSizeText('Hard (3 minutes)',
+                  child: AutoSizeText('\u{A0}Hard (3 minutes)\u{A0}',
                       maxLines: 1, style: TextStyle(fontSize: 120.0)),
                   onPressed: () {
                     selectDifficulty(context, Difficulty.Hard);
