@@ -11,7 +11,7 @@ matrix:
       before_install:
         # Get Flutter
         - if test ! -e $HOME/downloads/flutter_macos_v1.0.0-stable.zip ; then curl https://storage.googleapis.com/flutter_infra/releases/stable/macos/flutter_macos_v1.0.0-stable.zip > $HOME/downloads/flutter_macos_v1.0.0-stable.zip ; fi
-        - unzip $HOME/downloads/flutter_macos_v1.0.0-stable.zip
+        - unzip -qq -n $HOME/downloads/flutter_macos_v1.0.0-stable.zip
       script:
         - ./flutter/bin/flutter build ios --debug --no-codesign
 
